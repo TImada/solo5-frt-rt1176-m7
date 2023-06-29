@@ -1,0 +1,43 @@
+# Flags for C source files
+CFLAGS := \
+	-mcpu=cortex-m7 \
+	-mfloat-abi=hard \
+	-mfpu=fpv5-d16 \
+	-mthumb \
+	-Wall \
+	-fno-common \
+	-fno-builtin \
+	-ffreestanding \
+	-fdata-sections \
+	-ffunction-sections
+
+# Defined macros for C source files
+CDEFINES := \
+    -DUSE_SDRAM \
+    -DDATA_SECTION_IS_CACHEABLE=1 \
+    -DLWIP_TIMEVAL_PRIVATE=0 \
+    -DCPU_MIMXRT1176DVMAA_cm7 \
+    -DLWIP_ENET_FLEXIBLE_CONFIGURATION \
+    -DFSL_SDK_ENABLE_DRIVER_CACHE_CONTROL=1 \
+    -DFSL_FEATURE_PHYKSZ8081_USE_RMII50M_MODE \
+    -DUSE_RTOS=1 \
+    -DPRINTF_ADVANCED_ENABLE=1 \
+    -DFSL_SDK_DRIVER_QUICK_ACCESS_ENABLE=1 \
+    -DLWIP_DISABLE_PBUF_POOL_SIZE_SANITY_CHECKS=1 \
+    -DSERIAL_PORT_TYPE_UART=1 \
+    -DSDK_OS_FREE_RTOS \
+    -DMCUXPRESSO_SDK \
+    -DSDK_DEBUGCONSOLE=1
+
+# Flags for ASM source files
+ASMFLAGS := \
+	-mcpu=cortex-m7 \
+	-mfloat-abi=hard \
+	-mfpu=fpv5-d16 \
+	-mthumb
+
+# Defined macros for ASM source files
+ASMDEFINES := \
+    -D__STARTUP_CLEAR_BSS \
+    -DDEBUG \
+    -D__STARTUP_INITIALIZE_NONCACHEDATA

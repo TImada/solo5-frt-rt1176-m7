@@ -1,0 +1,69 @@
+ifndef MCU_SDK_TOP
+$(error MCU_SDK_TOP must be set)
+endif
+
+include Makefile.common
+
+# Package name
+PACKAGE := driver
+
+# Build configuration (debug or release)
+BUILD := debug
+
+# Core type (cm4 or cm7)
+CORE := cm7
+
+# C file path definition
+FILES_PATH := $(MCU_SDK_TOP)/components/lists \
+    $(MCU_SDK_TOP)/components/phy/device/phyksz8081 \
+    $(MCU_SDK_TOP)/components/phy/device/phyrtl8211f \
+    $(MCU_SDK_TOP)/components/serial_manager \
+    $(MCU_SDK_TOP)/components/silicon_id \
+    $(MCU_SDK_TOP)/components/silicon_id/socs/imxrt1170 \
+    $(MCU_SDK_TOP)/components/uart \
+    $(MCU_SDK_TOP)/devices/MIMXRT1176/drivers \
+    $(MCU_SDK_TOP)/devices/MIMXRT1176/drivers/$(CORE)
+
+# C file definition
+FILES := fsl_component_generic_list.c \
+    fsl_phyksz8081.c \
+    fsl_phyrtl8211f.c \
+    fsl_component_serial_manager.c \
+    fsl_component_serial_port_uart.c \
+    fsl_silicon_id.c \
+    fsl_silicon_id_soc.c \
+    fsl_adapter_lpuart.c \
+    fsl_cache.c \
+    fsl_anatop_ai.c \
+    fsl_clock.c \
+    fsl_common.c \
+    fsl_common_arm.c \
+    fsl_dcdc.c \
+    fsl_enet.c \
+    fsl_gpio.c \
+    fsl_lpuart.c \
+    fsl_pmu.c
+
+# ASM file path definition
+ASMFILES_PATH :=
+
+# ASM file definition
+ASMFILES :=
+
+# Header file path defintion
+INCLUDES := \
+    -I./ \
+    -I$(MCU_SDK_TOP)/devices/MIMXRT1176 \
+    -I$(MCU_SDK_TOP)/devices/MIMXRT1176/drivers \
+    -I$(MCU_SDK_TOP)/devices/MIMXRT1176/drivers/$(CORE) \
+    -I$(MCU_SDK_TOP)/devices/MIMXRT1176/utilities/debug_console \
+    -I$(MCU_SDK_TOP)/CMSIS/Core/Include \
+    -I$(MCU_SDK_TOP)/components \
+    -I$(MCU_SDK_TOP)/components/phy \
+    -I$(MCU_SDK_TOP)/components/serial_manager \
+    -I$(MCU_SDK_TOP)/components/silicon_id/socs \
+    -I$(MCU_SDK_TOP)/components/uart \
+    -I$(MCU_SDK_TOP)/rtos/freertos/freertos-kernel/portable/GCC/ARM_CM4F \
+    -I$(MCU_SDK_TOP)/rtos/freertos/freertos-kernel/include
+
+include Makefile.lib_common

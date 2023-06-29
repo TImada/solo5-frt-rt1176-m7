@@ -1,0 +1,49 @@
+# The following should not be modified
+## Compiler settings
+TARGET_CC := arm-none-eabi-gcc
+TARGET_AR := arm-none-eabi-ar
+
+ifeq ($(BUILD),debug)
+CFLAGS += -g
+CDEFINES += -DDEBUG
+ASMFLAGS += -g
+ASMDEFINES += -DDEBUG
+endif
+
+## Target library file name
+LIBNAME := lib$(PACKAGE)_$(BUILD).a
+
+## Build target setting
+OBJDIR := $(PACKAGE)
+OBJS := $(FILES:%.c=%.o)
+OBJS += $(ASMFILES:%.S=%.o)
+DEPS := $(FILES:%.c=%.d)
+DEPS := $(ASMFILES:%.S=%.d)
+
+vpath %.o $(OBJDIR)
+vpath %.c $(FILES_PATH)
+vpath %.S $(ASMFILES_PATH)
+
+## Object build commands
+$(OBJDIR)/%.o %.o: %.c
+	$(TARGET_CC) -c $(CFLAGS) $(INCLUDES) $(CDEFINES) -MMD -o $(OBJDIR)/$@ $<
+
+$(OBJDIR)/%.o %.o: %.S
+	$(TARGET_CC) -c $(ASMFLAGS) $(INCLUDES) $(ASMDEFINES) -MMD -o $(OBJDIR)/$@ $<
+
+lib : $(LIBNAME)
+
+$(OBJS) : | $(OBJDIR)
+$(OBJDIR) :
+	mkdir -p $@
+
+## Makefile targets
+.PHONY: lib $(LIBNAME) lib_clean
+
+$(LIBNAME) : $(OBJS)
+	$(TARGET_AR) rc $@ $(addprefix $(OBJDIR)/, $(OBJS))
+
+lib_clean:
+	rm -rf $(OBJDIR)
+	rm -f $(LIBNAME)
+

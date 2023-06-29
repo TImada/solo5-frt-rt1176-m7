@@ -1,0 +1,53 @@
+ifndef MCU_SDK_TOP
+$(error MCU_SDK_TOP must be set)
+endif
+
+include Makefile.common
+
+# Compiler settings
+TARGET_CC := arm-none-eabi-gcc
+TARGET_AR := arm-none-eabi-ar
+
+# Package name
+PACKAGE := solo5_frt
+
+# Build configuration (debug or release)
+BUILD := debug
+
+# Core type (cm4 or cm7)
+CORE := cm7
+
+# C file path definition
+FILES_PATH := frt
+
+# C file definition
+FILES := platform_rt1176_binding.c \
+	platform_rt1176_tender.c
+
+# ASM file path definition
+ASMFILES_PATH := 
+
+# ASM file definition
+ASMFILES := 
+
+# Header file path defintion
+INCLUDES := -I./ \
+    -I./ \
+    -I$(MCU_SDK_TOP)/middleware/lwip/src/include \
+    -I$(MCU_SDK_TOP)/middleware/lwip/port \
+    -I$(MCU_SDK_TOP)/devices/MIMXRT1176 \
+    -I$(MCU_SDK_TOP)/devices/MIMXRT1176/drivers \
+    -I$(MCU_SDK_TOP)/devices/MIMXRT1176/utilities/debug_console \
+    -I$(MCU_SDK_TOP)/boards/evkmimxrt1170/lwip_examples/lwip_ping/freertos/cm7 \
+    -I$(MCU_SDK_TOP)/CMSIS/Core/Include \
+    -I$(MCU_SDK_TOP)/components/phy \
+    -I$(MCU_SDK_TOP)/components/phy/device/phyksz8081 \
+    -I$(MCU_SDK_TOP)/components/phy/device/phyrtl8211f \
+    -I$(MCU_SDK_TOP)/components/serial_manager \
+    -I$(MCU_SDK_TOP)/components/silicon_id \
+    -I$(MCU_SDK_TOP)/components/uart \
+    -I$(MCU_SDK_TOP)/rtos/freertos/freertos-kernel/portable/GCC/ARM_CM4F \
+    -I$(MCU_SDK_TOP)/rtos/freertos/freertos-kernel/include
+
+include Makefile.lib_common
+

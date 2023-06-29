@@ -1,0 +1,47 @@
+ifndef MCU_SDK_TOP
+$(error MCU_SDK_TOP must be set)
+endif
+
+include Makefile.common
+
+# Package name
+PACKAGE := freertos
+
+# Build configuration (debug or release)
+BUILD := debug
+
+# Core type (cm4 or cm7)
+CORE := cm7
+
+# C file path definition
+FILES_PATH := $(MCU_SDK_TOP)/rtos/freertos/freertos-kernel \
+              $(MCU_SDK_TOP)/rtos/freertos/freertos-kernel/portable/GCC/ARM_CM4F \
+              $(MCU_SDK_TOP)/rtos/freertos/freertos-kernel/portable/MemMang \
+              ./solo5-frt-common/src/freertos
+
+# C file definition
+FILES := croutine.c \
+         event_groups.c \
+         list.c \
+         port.c \
+         heap_4.c \
+         queue.c \
+         stream_buffer.c \
+         tasks.c \
+         timers.c \
+         static_helper.c
+
+# ASM file path definition
+ASMFILES_PATH :=
+
+# ASM file definition
+ASMFILES :=
+
+# Header file path defintion
+INCLUDES := \
+    -I./ \
+    -I$(MCU_SDK_TOP)/boards/evkmimxrt1170/lwip_examples/lwip_ping/freertos/$(CORE) \
+    -I$(MCU_SDK_TOP)/rtos/freertos/freertos-kernel/include \
+    -I$(MCU_SDK_TOP)/rtos/freertos/freertos-kernel/portable/GCC/ARM_CM4F
+
+include Makefile.lib_common

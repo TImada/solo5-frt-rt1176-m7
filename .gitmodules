@@ -1,0 +1,3 @@
+[submodule "solo5-frt-common"]
+	path = solo5-frt-common
+	url = https://github.com/TImada/solo5-frt-common.git

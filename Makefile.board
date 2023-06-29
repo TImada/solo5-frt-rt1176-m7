@@ -1,0 +1,67 @@
+ifndef MCU_SDK_TOP
+$(error MCU_SDK_TOP must be set)
+endif
+
+include Makefile.common
+
+# Package name
+PACKAGE := board
+
+# Build configuration (debug or release)
+BUILD := debug
+
+# Core type (cm4 or cm7)
+CORE := cm7
+
+# C file path definition
+FILES_PATH := ./rt1170_evk \
+    $(MCU_SDK_TOP)/devices/MIMXRT1176 \
+    $(MCU_SDK_TOP)/devices/MIMXRT1176/utilities \
+    $(MCU_SDK_TOP)/devices/MIMXRT1176/utilities/str \
+    $(MCU_SDK_TOP)/devices/MIMXRT1176/utilities/debug_console \
+    $(MCU_SDK_TOP)/devices/MIMXRT1176/xip/ \
+    $(MCU_SDK_TOP)/boards/evkmimxrt1170/lwip_examples/lwip_ping/freertos/cm7 \
+    $(MCU_SDK_TOP)/boards/evkmimxrt1170/xip \
+    $(MCU_SDK_TOP)/boards/evkmimxrt1170/xmcd
+
+# C file definition
+FILES := fsl_assert.c \
+    fsl_sbrk.c \
+    fsl_str.c \
+    fsl_debug_console.c \
+    system_MIMXRT1176_cm7.c \
+    fsl_flexspi_nor_boot.c \
+    clock_config.c \
+    dcd.c \
+    lwip_ping_freertos.c \
+    pin_mux.c \
+    evkmimxrt1170_flexspi_nor_config.c \
+    xmcd.c \
+    board_solo5.c
+
+# ASM file path definition
+ASMFILES_PATH := $(MCU_SDK_TOP)/devices/MIMXRT1176/gcc \
+    $(MCU_SDK_TOP)/devices/MIMXRT1176/utilities 
+
+# ASM file definition
+ASMFILES := startup_MIMXRT1176_cm7.S \
+    fsl_memcpy.S
+
+# Header file path defintion
+INCLUDES := \
+    -I./ \
+    -I$(MCU_SDK_TOP)/devices/MIMXRT1176 \
+    -I$(MCU_SDK_TOP)/devices/MIMXRT1176/drivers \
+    -I$(MCU_SDK_TOP)/devices/MIMXRT1176/utilities/str \
+    -I$(MCU_SDK_TOP)/devices/MIMXRT1176/utilities/debug_console \
+    -I$(MCU_SDK_TOP)/boards/evkmimxrt1170/lwip_examples/lwip_ping/freertos/cm7 \
+    -I$(MCU_SDK_TOP)/CMSIS/Core/Include \
+    -I$(MCU_SDK_TOP)/components \
+    -I$(MCU_SDK_TOP)/components/serial_manager \
+    -I$(MCU_SDK_TOP)/components/uart \
+    -I$(MCU_SDK_TOP)/middleware/lwip/src/include \
+    -I$(MCU_SDK_TOP)/middleware/lwip/port \
+    -I$(MCU_SDK_TOP)/rtos/freertos/freertos-kernel/portable/GCC/ARM_CM4F \
+    -I$(MCU_SDK_TOP)/rtos/freertos/freertos-kernel/include
+
+include Makefile.lib_common

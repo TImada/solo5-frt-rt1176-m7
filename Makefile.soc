@@ -1,0 +1,94 @@
+# Copyright (c) 2023 Contributors as noted in the AUTHORS file
+#
+# This file is part of Solo5, a sandboxed execution environment.
+#
+# Permission to use, copy, modify, and/or distribute this software
+# for any purpose with or without fee is hereby granted, provided
+# that the above copyright notice and this permission notice appear
+# in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
+# WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
+# AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+# CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+# OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+# NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+# CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+ifndef CONFIG_PLATFORM_DIR
+$(error CONFIG_PLATFORM_DIR must be set, install a target platform package for Solo5)
+endif
+
+ifndef MCU_SDK_TOP
+$(error MCU_SDK_TOP must be set)
+endif
+
+GCC_PATH ?= `arm-none-eabi-gcc -print-sysroot`
+ifndef GCC_PATH
+$(error GCC_PATH must be set, configure $PATH so that you can execute arm-none-eabi-gcc)
+endif
+
+include $(CONFIG_PLATFORM_DIR)/Makefile.common
+
+# Core type (cm4 or cm7)
+CORE := cm7
+
+# Build configuration (debug or release)
+BUILD := debug
+
+### (Required) CPU architecture
+MARCH := armv7-m
+
+### (Required) Processor family
+PROC_FAMILY := ARM_V7M_DWT
+
+### (Required) flags for object compiling ###
+CFLAGS_SOC := $(CFLAGS) $(CDEFINES)
+HOSTCFLAGS_SOC := $(CFLAGS_SOC)
+
+### (Required) Additional source code files 
+frt_soc_SRCS := 
+
+### (Required) Additional header file paths (tender)
+CPPFLAGS_SOC := -I$(CONFIG_PLATFORM_DIR)/include \
+                -I$(MCU_SDK_TOP)/CMSIS/Core/Include \
+                -I$(MCU_SDK_TOP)/boards/evkmimxrt1170/lwip_examples/lwip_ping/freertos/$(CORE) \
+                -I$(MCU_SDK_TOP)/components/silicon_id \
+                -I$(MCU_SDK_TOP)/components/phy \
+                -I$(MCU_SDK_TOP)/components/phy/device/phyrtl8211f \
+                -I$(MCU_SDK_TOP)/components/serial_manager \
+                -I$(MCU_SDK_TOP)/components/uart \
+                -I$(MCU_SDK_TOP)/devices/MIMXRT1176 \
+                -I$(MCU_SDK_TOP)/devices/MIMXRT1176/drivers \
+                -I$(MCU_SDK_TOP)/devices/MIMXRT1176/utilities/debug_console \
+                -I$(MCU_SDK_TOP)/rtos/freertos/freertos-kernel/include \
+                -I$(MCU_SDK_TOP)/rtos/freertos/freertos-kernel/portable/GCC/ARM_CM4F \
+                -I$(MCU_SDK_TOP)/middleware/lwip/src/include \
+                -I$(MCU_SDK_TOP)/middleware/lwip/port
+HOSTCPPFLAGS_SOC := $(CPPFLAGS_SOC)
+
+### (Required) Linker file path with its absolute path
+LD_FILE := \
+	$(CONFIG_PLATFORM_DIR)/solo5_frt.lds
+
+### (Required) Library paths
+LIBS_PATH := -L${OPAM_SWITCH_PREFIX}/solo5-frt-rt1176-m7/lib
+
+### (Required) Library names
+LIBS := \
+	-l:libboard_${BUILD}.a \
+	-l:libdriver_${BUILD}.a \
+	-l:libfreertos_${BUILD}.a \
+	-l:liblwip_${BUILD}.a \
+	-l:libsolo5_frt_${BUILD}.a \
+    -l:crt0.o \
+    -l:crti.o \
+    -l:crtn.o
+
+### (Required) Link flags for the linker
+LD_LFLAGS :=
+
+### (Required) Link flags for the compiler
+CC_LFLAGS := -z muldefs
+

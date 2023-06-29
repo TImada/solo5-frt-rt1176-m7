@@ -1,0 +1,107 @@
+ifndef MCU_SDK_TOP
+$(error MCU_SDK_TOP must be set)
+endif
+
+include Makefile.common
+
+# Package name
+PACKAGE := lwip
+
+# Build configuration (debug or release)
+BUILD := debug
+
+# Core type (cm4 or cm7)
+CORE := cm7
+
+# C file path definition
+FILES_PATH := $(MCU_SDK_TOP)/middleware/lwip/port \
+    $(MCU_SDK_TOP)/middleware/lwip/src/api \
+    $(MCU_SDK_TOP)/middleware/lwip/src/core \
+    $(MCU_SDK_TOP)/middleware/lwip/src/core/ipv4 \
+    $(MCU_SDK_TOP)/middleware/lwip/src/core/ipv6 \
+    $(MCU_SDK_TOP)/middleware/lwip/src/netif
+
+# C file definition
+FILES := enet_ethernetif.c \
+    enet_ethernetif_kinetis.c \
+    ethernetif.c \
+    ethernetif_mmac.c \
+    sys_arch.c \
+    api_lib.c \
+    api_msg.c \
+    err.c \
+    if_api.c \
+    netbuf.c \
+    netdb.c \
+    netifapi.c \
+    sockets.c \
+    tcpip.c \
+    altcp.c \
+    altcp_alloc.c \
+    altcp_tcp.c \
+    def.c \
+    dns.c \
+    inet_chksum.c \
+    init.c \
+    ip.c \
+    acd.c \
+    autoip.c \
+    dhcp.c \
+    etharp.c \
+    icmp.c \
+    igmp.c \
+    ip4.c \
+    ip4_addr.c \
+    ip4_frag.c \
+    dhcp6.c \
+    ethip6.c \
+    icmp6.c \
+    inet6.c \
+    ip6.c \
+    ip6_addr.c \
+    ip6_frag.c \
+    mld6.c \
+    nd6.c \
+    mem.c \
+    memp.c \
+    netif.c \
+    pbuf.c \
+    raw.c \
+    stats.c \
+    sys.c \
+    tcp.c \
+    tcp_in.c \
+    tcp_out.c \
+    timeouts.c \
+    udp.c \
+    bridgeif.c \
+    bridgeif_fdb.c \
+    ethernet.c \
+    lowpan6.c \
+    lowpan6_ble.c \
+    lowpan6_common.c
+
+# ASM file path definition
+ASMFILES_PATH :=
+
+# ASM file definition
+ASMFILES :=
+
+# Header file path defintion
+INCLUDES := \
+    -I./ \
+    -I$(MCU_SDK_TOP)/middleware/lwip/src \
+    -I$(MCU_SDK_TOP)/middleware/lwip/src/include \
+    -I$(MCU_SDK_TOP)/middleware/lwip/port \
+    -I$(MCU_SDK_TOP)/devices/MIMXRT1176 \
+    -I$(MCU_SDK_TOP)/devices/MIMXRT1176/drivers \
+    -I$(MCU_SDK_TOP)/devices/MIMXRT1176/utilities/debug_console \
+    -I$(MCU_SDK_TOP)/CMSIS/Core/Include \
+    -I$(MCU_SDK_TOP)/components \
+    -I$(MCU_SDK_TOP)/components/phy \
+    -I$(MCU_SDK_TOP)/components/serial_manager \
+    -I$(MCU_SDK_TOP)/components/uart \
+    -I$(MCU_SDK_TOP)/rtos/freertos/freertos-kernel/portable/GCC/ARM_CM4F \
+    -I$(MCU_SDK_TOP)/rtos/freertos/freertos-kernel/include
+
+include Makefile.lib_common
