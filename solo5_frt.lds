@@ -26,10 +26,13 @@ ENTRY(Reset_Handler)
 HEAP_SIZE  = DEFINED(__heap_size__)  ? __heap_size__  : 25600;
 STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 2048;
 
-SDRAM_START         = 0x80000000;
-SDRAM_SIZE          = 0x04000000; /* 64MB */
+/* SDRAM starts at 0x80000000.
+ * But the first 8KB(0x2000) reserved for the bootloader.
+ */
+SDRAM_START         = 0x80002000;
+SDRAM_SIZE          = 0x03FFE000; /* 64MB - 8KB */
 SDRAM_CODE_START    = SDRAM_START;
-SDRAM_CODE_SIZE     = 0x00400000; /* 4MB */
+SDRAM_CODE_SIZE     = 0x003FE000; /* 4MB */
 SDRAM_DATA_START    = SDRAM_CODE_START + SDRAM_CODE_SIZE;
 SDRAM_DATA_SIZE     = 0x00400000; /* 4MB */
 SDRAM_NCACHE_START  = SDRAM_DATA_START + SDRAM_DATA_SIZE;
@@ -40,7 +43,7 @@ MIRAGE_HEAP_SIZE    = 0x01000000; /* 16MB */
 /* Specify the memory areas */
 MEMORY
 {
-  /* 512KB - 8KB ITCM for isr_vector (First 8KB for the bootloader) */
+  /* 512KB ITCM for isr_vector */
   ITCM          (RX)  : ORIGIN = 0x00002000, LENGTH = 0x0007C000
   /* 512KB DTCM (not used) */
   DTCM          (RW)  : ORIGIN = 0x20000000, LENGTH = 0x00080000
@@ -71,7 +74,7 @@ SECTIONS
     . = ALIGN(4);
     KEEP(*(.isr_vector))     /* Startup code */
     . = ALIGN(4);
-  } > ITCM
+  } > SDRAM_CODE
 
   _mem_start = SDRAM_START;
   _mem_size = SDRAM_SIZE;

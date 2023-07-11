@@ -14,6 +14,7 @@ CFLAGS := \
 # Defined macros for C source files
 CDEFINES := \
     -DUSE_SDRAM \
+    -DSKIP_SYSCLK_INIT=1 \
     -DDATA_SECTION_IS_CACHEABLE=1 \
     -DLWIP_TIMEVAL_PRIVATE=0 \
     -DCPU_MIMXRT1176DVMAA_cm7 \
