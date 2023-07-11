@@ -77,32 +77,33 @@ void platform_block_init(void)
 /* Network device initialization */
 void platform_net_init(void)
 {
+    if (solo5_netif[0].input != NULL) {
 #if LWIP_TCPIP_CORE_LOCKING
-    if (sys_mutex_new(&lock_tcpip_core) != ERR_OK) {
-      LWIP_ASSERT("Failed to create lock_tcpip_core", 0);
-    }
+        if (sys_mutex_new(&lock_tcpip_core) != ERR_OK) {
+            LWIP_ASSERT("Failed to create lock_tcpip_core", 0);
+        }
 #endif /* LWIP_TCPIP_CORE_LOCKING */
     
-    /* Create a new task to detect network status periodically */
-    nwsTask = xTaskCreateStatic(nw_status_handler,
-                                "nw_status",
-                                NWS_STACK_ELEMS,
-                                NULL,
-                                NWS_TASK_PRI,
-                                nwsStack,
-                                &nwsTaskObj);
-    if (nwsTask == NULL) {
-        LWIP_ASSERT("Failed to create a task to check network status", 0);
+        /* Create a new task to detect network status periodically */
+        nwsTask = xTaskCreateStatic(nw_status_handler,
+                                    "nw_status",
+                                    NWS_STACK_ELEMS,
+                                    NULL,
+                                    NWS_TASK_PRI,
+                                    nwsStack,
+                                    &nwsTaskObj);
+        if (nwsTask == NULL) {
+            LWIP_ASSERT("Failed to create a task to check network status", 0);
+        }
+     
+        /* Wait until the port becomes ready */
+        netifapi_netif_set_default(&solo5_netif[0]);
+        netifapi_netif_set_up(&solo5_netif[0]);
+        while (ethernetif_wait_linkup(&solo5_netif[0], 5000) != ERR_OK)
+        {
+             DbgConsole_Printf("solo5_netif[%d] : Auto-negotiation failed.\r\n", 0);
+        }
     }
- 
-    /* Wait until the port becomes ready */
-    netifapi_netif_set_default(&solo5_netif[0]);
-    netifapi_netif_set_up(&solo5_netif[0]);
-    while (ethernetif_wait_linkup(&solo5_netif[0], 5000) != ERR_OK)
-    {
-         DbgConsole_Printf("solo5_netif[%d] : Auto-negotiation failed.\r\n", 0);
-    }
-
     return;
 }
 
